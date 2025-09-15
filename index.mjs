@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
 
-const html = fs.readFileSync('index.html', { encoding: 'utf8' });
+const html = fs.readFileSync('index2.html', { encoding: 'utf8' });
 
 /**
  * Returns an HTML page containing an interactive Web-based tutorial.
