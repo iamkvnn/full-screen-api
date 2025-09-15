@@ -1,0 +1,31 @@
+name: Deploy Lambda
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::829933968679:role/git_lambda_deploy
+          aws-region: ap-southeast-2
+
+      - name: Zip source
+        run: zip -r function.zip .
+
+      - name: Deploy to Lambda
+        run: |
+          aws lambda update-function-code \
+            --function-name fullscreen-api \
+            --zip-file fileb://function.zip
