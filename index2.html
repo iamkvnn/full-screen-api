@@ -1,561 +1,603 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0"
+    />
     <title>Netflix Việt Nam – Xem series trực tuyến, Xem phim trực tuyến</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background: #000;
-            color: #fff;
-            line-height: 1.6;
-        }
+      body {
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        background: #000;
+        color: #fff;
+        line-height: 1.6;
+      }
 
-        /* Header */
+      /* Header */
+      .header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        background: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0.7) 10%,
+          transparent
+        );
+        padding: 20px 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        color: #e50914;
+        font-size: 32px;
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .language-selector {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid #333;
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 4px;
+      }
+
+      .sign-in-btn {
+        background: #e50914;
+        color: #fff;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .sign-in-btn:hover {
+        background: #f40612;
+      }
+
+      /* Hero Section */
+      .hero {
+        height: 100vh;
+        background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7)),
+          url("netflix_bg.jpg");
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0 20px;
+      }
+
+      .hero-content h1 {
+        font-size: 3.5rem;
+        font-weight: 900;
+        margin-bottom: 20px;
+        max-width: 800px;
+        line-height: 1.1;
+      }
+
+      .hero-content p {
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+        font-weight: 400;
+      }
+
+      .cta-button {
+        background: #e50914;
+        color: #fff;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 4px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .cta-button:hover {
+        background: #f40612;
+        transform: translateY(-2px);
+      }
+
+      .cta-button::after {
+        content: ">";
+        font-weight: bold;
+      }
+
+      /* Trending Section */
+      .trending {
+        padding: 80px 50px;
+        background: #111;
+      }
+
+      .trending h2 {
+        font-size: 2rem;
+        margin-bottom: 30px;
+        font-weight: 700;
+      }
+
+      .trending-grid {
+        display: flex;
+        gap: 20px;
+        overflow-x: auto;
+        padding-bottom: 20px;
+      }
+
+      .trending-item {
+        position: relative;
+        min-width: 200px;
+        height: 300px;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      .trending-item:hover {
+        transform: scale(1.05);
+      }
+
+      .trending-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          135deg,
+          #e50914,
+          #f40612,
+          #ff6b6b,
+          #4ecdc4,
+          #45b7d1
+        );
+        opacity: 0.8;
+      }
+
+      .trending-number {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        font-size: 4rem;
+        font-weight: 900;
+        color: #fff;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        z-index: 2;
+      }
+
+      /* Features Section */
+      .features {
+        padding: 80px 50px;
+        background: #000;
+      }
+
+      .features h2 {
+        font-size: 2rem;
+        margin-bottom: 50px;
+        text-align: center;
+        font-weight: 700;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .feature-card {
+        background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+        padding: 40px 30px;
+        border-radius: 12px;
+        text-align: center;
+        transition: transform 0.3s ease;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+      }
+
+      .feature-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        background: linear-gradient(135deg, #e50914, #f40612);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+      }
+
+      .feature-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        font-weight: 700;
+      }
+
+      .feature-card p {
+        color: #ccc;
+        line-height: 1.6;
+      }
+
+      /* FAQ Section */
+      .faq {
+        padding: 80px 50px;
+        background: #111;
+      }
+
+      .faq h2 {
+        font-size: 2rem;
+        margin-bottom: 50px;
+        text-align: center;
+        font-weight: 700;
+      }
+
+      .faq-container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .faq-item {
+        margin-bottom: 10px;
+        background: #333;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .faq-question {
+        width: 100%;
+        padding: 25px 30px;
+        background: #333;
+        border: none;
+        color: #fff;
+        font-size: 1.2rem;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background 0.3s ease;
+      }
+
+      .faq-question:hover {
+        background: #444;
+      }
+
+      .faq-question::after {
+        content: "+";
+        font-size: 2rem;
+        transition: transform 0.3s ease;
+      }
+
+      .faq-question.active::after {
+        transform: rotate(45deg);
+      }
+
+      .faq-answer {
+        padding: 0 30px;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        background: #222;
+      }
+
+      .faq-answer.active {
+        max-height: 200px;
+        padding: 25px 30px;
+      }
+
+      /* Footer */
+      .footer {
+        padding: 80px 50px 40px;
+        background: #000;
+        color: #999;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .footer-links {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+      }
+
+      .footer-links a {
+        color: #999;
+        text-decoration: none;
+        margin-bottom: 10px;
+        display: block;
+        transition: color 0.3s ease;
+      }
+
+      .footer-links a:hover {
+        color: #fff;
+      }
+
+      .footer-bottom {
+        text-align: center;
+        padding-top: 20px;
+        border-top: 1px solid #333;
+        color: #666;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
         .header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            background: linear-gradient(180deg, rgba(0,0,0,0.7) 10%, transparent);
-            padding: 20px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            color: #e50914;
-            font-size: 32px;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .language-selector {
-            background: rgba(0,0,0,0.4);
-            border: 1px solid #333;
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 4px;
-        }
-
-        .sign-in-btn {
-            background: #e50914;
-            color: #fff;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .sign-in-btn:hover {
-            background: #f40612;
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), 
-                url('netflix_bg.jpg');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 20px;
+          padding: 15px 20px;
         }
 
         .hero-content h1 {
-            font-size: 3.5rem;
-            font-weight: 900;
-            margin-bottom: 20px;
-            max-width: 800px;
-            line-height: 1.1;
+          font-size: 2.5rem;
         }
 
         .hero-content p {
-            font-size: 1.5rem;
-            margin-bottom: 30px;
-            font-weight: 400;
+          font-size: 1.2rem;
         }
 
-        .cta-button {
-            background: #e50914;
-            color: #fff;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 4px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .cta-button:hover {
-            background: #f40612;
-            transform: translateY(-2px);
-        }
-
-        .cta-button::after {
-            content: '>';
-            font-weight: bold;
-        }
-
-        /* Trending Section */
-        .trending {
-            padding: 80px 50px;
-            background: #111;
-        }
-
-        .trending h2 {
-            font-size: 2rem;
-            margin-bottom: 30px;
-            font-weight: 700;
-        }
-
-        .trending-grid {
-            display: flex;
-            gap: 20px;
-            overflow-x: auto;
-            padding-bottom: 20px;
-        }
-
-        .trending-item {
-            position: relative;
-            min-width: 200px;
-            height: 300px;
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .trending-item:hover {
-            transform: scale(1.05);
-        }
-
-        .trending-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #e50914, #f40612, #ff6b6b, #4ecdc4, #45b7d1);
-            opacity: 0.8;
-        }
-
-        .trending-number {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            font-size: 4rem;
-            font-weight: 900;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            z-index: 2;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 80px 50px;
-            background: #000;
-        }
-
-        .features h2 {
-            font-size: 2rem;
-            margin-bottom: 50px;
-            text-align: center;
-            font-weight: 700;
+        .trending,
+        .features,
+        .faq {
+          padding: 60px 20px;
         }
 
         .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
+          grid-template-columns: 1fr;
         }
 
-        .feature-card {
-            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-            padding: 40px 30px;
-            border-radius: 12px;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #e50914, #f40612);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-        }
-
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-
-        .feature-card p {
-            color: #ccc;
-            line-height: 1.6;
-        }
-
-        /* FAQ Section */
-        .faq {
-            padding: 80px 50px;
-            background: #111;
-        }
-
-        .faq h2 {
-            font-size: 2rem;
-            margin-bottom: 50px;
-            text-align: center;
-            font-weight: 700;
-        }
-
-        .faq-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .faq-item {
-            margin-bottom: 10px;
-            background: #333;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .faq-question {
-            width: 100%;
-            padding: 25px 30px;
-            background: #333;
-            border: none;
-            color: #fff;
-            font-size: 1.2rem;
-            text-align: left;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.3s ease;
-        }
-
-        .faq-question:hover {
-            background: #444;
-        }
-
-        .faq-question::after {
-            content: '+';
-            font-size: 2rem;
-            transition: transform 0.3s ease;
-        }
-
-        .faq-question.active::after {
-            transform: rotate(45deg);
-        }
-
-        .faq-answer {
-            padding: 0 30px;
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            background: #222;
-        }
-
-        .faq-answer.active {
-            max-height: 200px;
-            padding: 25px 30px;
-        }
-
-        /* Footer */
         .footer {
-            padding: 80px 50px 40px;
-            background: #000;
-            color: #999;
+          padding: 60px 20px 40px;
         }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-links {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .footer-links a {
-            color: #999;
-            text-decoration: none;
-            margin-bottom: 10px;
-            display: block;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: #fff;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid #333;
-            color: #666;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header {
-                padding: 15px 20px;
-            }
-
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero-content p {
-                font-size: 1.2rem;
-            }
-
-            .trending, .features, .faq {
-                padding: 60px 20px;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .footer {
-                padding: 60px 20px 40px;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Header -->
     <header class="header">
-        <a href="#" class="logo">NETFLIX</a>
-        <div class="header-right">
-            <a href="#" class="sign-in-btn">Đăng nhập</a>
-        </div>
+      <a href="#" class="logo">NETFLIX</a>
+      <div class="header-right">
+        <a href="./login.html" class="sign-in-btn">Đăng nhập</a>
+      </div>
     </header>
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-content">
-            <h1>Phim, series không giới hạn và nhiều nội dung khác</h1>
-            <p>Giá từ 74.000 ₫. Hủy bất kỳ lúc nào.</p>
-            <a href="#" class="cta-button">Kích hoạt lại tư cách thành viên</a>
-        </div>
+      <div class="hero-content">
+        <h1>Phim, series không giới hạn và nhiều nội dung khác</h1>
+        <p>Giá từ 74.000 ₫. Hủy bất kỳ lúc nào.</p>
+        <a href="#" class="cta-button">Kích hoạt lại tư cách thành viên</a>
+      </div>
     </section>
 
     <!-- Trending Section -->
     <section class="trending">
-        <h2>Hiện đang thịnh hành</h2>
-        <div class="trending-grid">
-            <div class="trending-item">
-                <div class="trending-number">1</div>
-            </div>
-            <div class="trending-item">
-                <div class="trending-number">2</div>
-            </div>
-            <div class="trending-item">
-                <div class="trending-number">3</div>
-            </div>
-            <div class="trending-item">
-                <div class="trending-number">4</div>
-            </div>
-            <div class="trending-item">
-                <div class="trending-number">5</div>
-            </div>
+      <h2>Hiện đang thịnh hành</h2>
+      <div class="trending-grid">
+        <div class="trending-item">
+          <div class="trending-number">1</div>
         </div>
+        <div class="trending-item">
+          <div class="trending-number">2</div>
+        </div>
+        <div class="trending-item">
+          <div class="trending-number">3</div>
+        </div>
+        <div class="trending-item">
+          <div class="trending-number">4</div>
+        </div>
+        <div class="trending-item">
+          <div class="trending-number">5</div>
+        </div>
+      </div>
     </section>
 
     <!-- Features Section -->
     <section class="features">
-        <h2>Thêm lý do để tham gia</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">📺</div>
-                <h3>Thưởng thức trên TV của bạn</h3>
-                <p>Xem trên TV thông minh, Playstation, Xbox, Chromecast, Apple TV, đầu phát Blu-ray và nhiều thiết bị khác.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📱</div>
-                <h3>Tải xuống nội dung để xem ngoại tuyến</h3>
-                <p>Lưu những nội dung yêu thích một cách dễ dàng và luôn có nội dung để xem.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🎬</div>
-                <h3>Xem ở mọi nơi</h3>
-                <p>Phát trực tuyến không giới hạn phim và series trên điện thoại, máy tính bảng, máy tính xách tay và TV.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">👨‍👩‍👧‍👦</div>
-                <h3>Tạo hồ sơ cho trẻ em</h3>
-                <p>Đưa các con vào những cuộc phiêu lưu với các nhân vật yêu thích trong không gian riêng dành cho trẻ em.</p>
-            </div>
+      <h2>Thêm lý do để tham gia</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📺</div>
+          <h3>Thưởng thức trên TV của bạn</h3>
+          <p>
+            Xem trên TV thông minh, Playstation, Xbox, Chromecast, Apple TV, đầu
+            phát Blu-ray và nhiều thiết bị khác.
+          </p>
         </div>
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>Tải xuống nội dung để xem ngoại tuyến</h3>
+          <p>
+            Lưu những nội dung yêu thích một cách dễ dàng và luôn có nội dung để
+            xem.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎬</div>
+          <h3>Xem ở mọi nơi</h3>
+          <p>
+            Phát trực tuyến không giới hạn phim và series trên điện thoại, máy
+            tính bảng, máy tính xách tay và TV.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👨‍👩‍👧‍👦</div>
+          <h3>Tạo hồ sơ cho trẻ em</h3>
+          <p>
+            Đưa các con vào những cuộc phiêu lưu với các nhân vật yêu thích
+            trong không gian riêng dành cho trẻ em.
+          </p>
+        </div>
+      </div>
     </section>
 
     <!-- FAQ Section -->
     <section class="faq">
-        <h2>Câu hỏi thường gặp</h2>
-        <div class="faq-container">
-            <div class="faq-item">
-                <button class="faq-question">
-                    Netflix là gì?
-                </button>
-                <div class="faq-answer">
-                    <p>Netflix là một dịch vụ phát trực tuyến cung cấp nhiều loại chương trình TV đoạt giải thưởng, phim và nội dung gốc trên hàng nghìn thiết bị có kết nối internet.</p>
-                </div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-question">
-                    Tôi phải trả bao nhiêu tiền để xem Netflix?
-                </button>
-                <div class="faq-answer">
-                    <p>Xem Netflix trên điện thoại thông minh, máy tính bảng, TV thông minh, máy tính xách tay hoặc thiết bị phát trực tuyến, tất cả với một mức phí hàng tháng cố định.</p>
-                </div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-question">
-                    Tôi có thể xem ở đâu?
-                </button>
-                <div class="faq-answer">
-                    <p>Xem ở mọi nơi, mọi lúc. Đăng nhập bằng tài khoản Netflix để xem ngay lập tức trên web tại netflix.com từ máy tính cá nhân hoặc trên bất kỳ thiết bị nào có kết nối internet.</p>
-                </div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-question">
-                    Làm thế nào để hủy?
-                </button>
-                <div class="faq-answer">
-                    <p>Netflix rất linh hoạt. Không có hợp đồng phiền phức và không có cam kết. Bạn có thể dễ dàng hủy tài khoản trực tuyến chỉ bằng hai cú nhấp chuột.</p>
-                </div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-question">
-                    Netflix có phù hợp cho trẻ em không?
-                </button>
-                <div class="faq-answer">
-                    <p>Trải nghiệm Netflix Kids được bao gồm trong tư cách thành viên để mang đến cho phụ huynh quyền kiểm soát trong khi trẻ thưởng thức các chương trình TV và phim phù hợp với gia đình.</p>
-                </div>
-            </div>
+      <h2>Câu hỏi thường gặp</h2>
+      <div class="faq-container">
+        <div class="faq-item">
+          <button class="faq-question">Netflix là gì?</button>
+          <div class="faq-answer">
+            <p>
+              Netflix là một dịch vụ phát trực tuyến cung cấp nhiều loại chương
+              trình TV đoạt giải thưởng, phim và nội dung gốc trên hàng nghìn
+              thiết bị có kết nối internet.
+            </p>
+          </div>
         </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            Tôi phải trả bao nhiêu tiền để xem Netflix?
+          </button>
+          <div class="faq-answer">
+            <p>
+              Xem Netflix trên điện thoại thông minh, máy tính bảng, TV thông
+              minh, máy tính xách tay hoặc thiết bị phát trực tuyến, tất cả với
+              một mức phí hàng tháng cố định.
+            </p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">Tôi có thể xem ở đâu?</button>
+          <div class="faq-answer">
+            <p>
+              Xem ở mọi nơi, mọi lúc. Đăng nhập bằng tài khoản Netflix để xem
+              ngay lập tức trên web tại netflix.com từ máy tính cá nhân hoặc
+              trên bất kỳ thiết bị nào có kết nối internet.
+            </p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">Làm thế nào để hủy?</button>
+          <div class="faq-answer">
+            <p>
+              Netflix rất linh hoạt. Không có hợp đồng phiền phức và không có
+              cam kết. Bạn có thể dễ dàng hủy tài khoản trực tuyến chỉ bằng hai
+              cú nhấp chuột.
+            </p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            Netflix có phù hợp cho trẻ em không?
+          </button>
+          <div class="faq-answer">
+            <p>
+              Trải nghiệm Netflix Kids được bao gồm trong tư cách thành viên để
+              mang đến cho phụ huynh quyền kiểm soát trong khi trẻ thưởng thức
+              các chương trình TV và phim phù hợp với gia đình.
+            </p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-links">
-                <div>
-                    <a href="#">Câu hỏi thường gặp</a>
-                    <a href="#">Quan hệ với nhà đầu tư</a>
-                    <a href="#">Quyền riêng tư</a>
-                    <a href="#">Kiểm tra tốc độ</a>
-                </div>
-                <div>
-                    <a href="#">Trung tâm trợ giúp</a>
-                    <a href="#">Việc làm</a>
-                    <a href="#">Tùy chọn cookie</a>
-                    <a href="#">Thông báo pháp lý</a>
-                </div>
-                <div>
-                    <a href="#">Tài khoản</a>
-                    <a href="#">Các cách xem</a>
-                    <a href="#">Thông tin doanh nghiệp</a>
-                    <a href="#">Chỉ có trên Netflix</a>
-                </div>
-                <div>
-                    <a href="#">Trung tâm đa phương tiện</a>
-                    <a href="#">Điều khoản sử dụng</a>
-                    <a href="#">Liên hệ với chúng tôi</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <select class="language-selector">
-                    <option>🌐 Tiếng Việt</option>
-                    <option>🌐 English</option>
-                </select>
-                <p style="margin-top: 20px;">Netflix Việt Nam</p>
-            </div>
+      <div class="footer-content">
+        <div class="footer-links">
+          <div>
+            <a href="#">Câu hỏi thường gặp</a>
+            <a href="#">Quan hệ với nhà đầu tư</a>
+            <a href="#">Quyền riêng tư</a>
+            <a href="#">Kiểm tra tốc độ</a>
+          </div>
+          <div>
+            <a href="#">Trung tâm trợ giúp</a>
+            <a href="#">Việc làm</a>
+            <a href="#">Tùy chọn cookie</a>
+            <a href="#">Thông báo pháp lý</a>
+          </div>
+          <div>
+            <a href="#">Tài khoản</a>
+            <a href="#">Các cách xem</a>
+            <a href="#">Thông tin doanh nghiệp</a>
+            <a href="#">Chỉ có trên Netflix</a>
+          </div>
+          <div>
+            <a href="#">Trung tâm đa phương tiện</a>
+            <a href="#">Điều khoản sử dụng</a>
+            <a href="#">Liên hệ với chúng tôi</a>
+          </div>
         </div>
+        <div class="footer-bottom">
+          <select class="language-selector">
+            <option>🌐 Tiếng Việt</option>
+            <option>🌐 English</option>
+          </select>
+          <p style="margin-top: 20px">Netflix Việt Nam</p>
+        </div>
+      </div>
     </footer>
 
     <script>
-        // FAQ Toggle Functionality
-        document.querySelectorAll('.faq-question').forEach(question => {
-            question.addEventListener('click', () => {
-                const answer = question.nextElementSibling;
-                const isActive = question.classList.contains('active');
+      // FAQ Toggle Functionality
+      document.querySelectorAll(".faq-question").forEach((question) => {
+        question.addEventListener("click", () => {
+          const answer = question.nextElementSibling;
+          const isActive = question.classList.contains("active");
 
-                // Close all other FAQ items
-                document.querySelectorAll('.faq-question').forEach(q => {
-                    q.classList.remove('active');
-                    q.nextElementSibling.classList.remove('active');
-                });
+          // Close all other FAQ items
+          document.querySelectorAll(".faq-question").forEach((q) => {
+            q.classList.remove("active");
+            q.nextElementSibling.classList.remove("active");
+          });
 
-                // Toggle current item
-                if (!isActive) {
-                    question.classList.add('active');
-                    answer.classList.add('active');
-                }
-            });
+          // Toggle current item
+          if (!isActive) {
+            question.classList.add("active");
+            answer.classList.add("active");
+          }
         });
+      });
 
-        // Smooth scrolling for CTA button
-        document.querySelector('.cta-button').addEventListener('click', (e) => {
-            e.preventDefault();
-            document.querySelector('.features').scrollIntoView({ 
-                behavior: 'smooth' 
-            });
+      // Smooth scrolling for CTA button
+      document.querySelector(".cta-button").addEventListener("click", (e) => {
+        e.preventDefault();
+        document.querySelector(".features").scrollIntoView({
+          behavior: "smooth",
         });
+      });
 
-        // // Header background on scroll
-        // window.addEventListener('scroll', () => {
-        //     const header = document.querySelector('.header');
-        //     if (window.scrollY > 100) {
-        //         header.style.background = 'rgba(0,0,0,0.9)';
-        //     } else {
-        //         header.style.background = 'linear-gradient(180deg, rgba(0,0,0,0.7) 10%, transparent)';
-        //     }
-        // });
+      // // Header background on scroll
+      // window.addEventListener('scroll', () => {
+      //     const header = document.querySelector('.header');
+      //     if (window.scrollY > 100) {
+      //         header.style.background = 'rgba(0,0,0,0.9)';
+      //     } else {
+      //         header.style.background = 'linear-gradient(180deg, rgba(0,0,0,0.7) 10%, transparent)';
+      //     }
+      // });
     </script>
-</body>
+  </body>
 </html>
