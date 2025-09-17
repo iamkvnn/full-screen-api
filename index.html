@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fullscreen API Attack - Security Demo</title>
+    <link rel="stylesheet" href="./landing_page.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>🛡️ Fullscreen API Attack</h1>
+        <p class="subtitle">Nghiên cứu lỗ hổng bảo mật trong trình duyệt web</p>
+        <div class="warning-badge">⚠️ Educational Purpose Only</div>
+      </header>
+
+      <div class="content">
+        <div class="card">
+          <div class="icon">🎯</div>
+          <h2>Fullscreen API Attack là gì?</h2>
+          <p>
+            Fullscreen API Attack là một kỹ thuật tấn công lợi dụng Fullscreen
+            API của trình duyệt để tạo ra các trang web giả mạo có thể lừa đảo
+            người dùng.
+          </p>
+          <p>
+            Kẻ tấn công có thể sử dụng API này để hiển thị nội dung toàn màn
+            hình, che giấu thanh địa chỉ và các thành phần UI của trình duyệt.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="icon">⚡</div>
+          <h2>Mức độ nguy hiểm</h2>
+          <p>
+            Kỹ thuật này có thể được sử dụng trong các cuộc tấn công phishing
+            tinh vi, nơi người dùng không thể nhận biết được URL thực của trang
+            web.
+          </p>
+          <p>
+            Đặc biệt nguy hiểm khi kết hợp với social engineering để tạo ra
+            những trang đăng nhập giả mạo các dịch vụ phổ biến.
+          </p>
+        </div>
+      </div>
+
+      <div class="attack-steps">
+        <h2>🔍 Cách thức hoạt động</h2>
+        <div class="steps-grid">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Kích hoạt</h3>
+            <p>Sử dụng JavaScript để gọi requestFullscreen() API</p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>Che giấu UI</h3>
+            <p>Ẩn thanh địa chỉ và các thành phần của trình duyệt</p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>Giả mạo</h3>
+            <p>Hiển thị giao diện giả mạo trang web hợp pháp</p>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <h3>Thu thập</h3>
+            <p>Lừa người dùng nhập thông tin nhạy cảm</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        <h3>⚠️ Tuyên bố miễn trừ trách nhiệm</h3>
+        <p>
+          Demo này được tạo ra chỉ với mục đích giáo dục và nghiên cứu bảo mật.
+          Việc sử dụng kỹ thuật này cho mục đích bất hợp pháp là hoàn toàn bị
+          cấm và có thể dẫn đến hậu quả pháp lý nghiêm trọng.
+        </p>
+      </div>
+
+      <div class="demo-section">
+        <h2>🧪 Thử nghiệm Demo</h2>
+        <p style="margin-bottom: 30px; font-size: 1.1rem; opacity: 0.9">
+          Khám phá cách thức hoạt động của Fullscreen API Attack thông qua demo
+          tương tác
+        </p>
+        <a href="./index3.html" class="demo-button" onclick="openDemo()">
+          🚀 Chạy Demo Thử Nghiệm
+        </a>
+      </div>
+
+      <footer class="footer">
+        <p>
+          &copy; 2024 Security Research Demo | Chỉ dành cho mục đích giáo dục
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      const btn = document.querySelector(".demo-button"); // ✅ lấy đúng 1 element
+      btn.addEventListener("click", function (e) {
+        e.preventDefault(); // chặn chuyển trang
+
+        const elem = document.documentElement;
+
+        // Yêu cầu fullscreen
+        const requestFS =
+          elem.requestFullscreen?.bind(elem) ||
+          elem.webkitRequestFullscreen?.bind(elem) ||
+          elem.mozRequestFullScreen?.bind(elem) ||
+          elem.msRequestFullscreen?.bind(elem);
+
+        if (requestFS) {
+          requestFS().catch(() => {});
+        }
+
+        // Tải nội dung index2.html và gán vào body
+        fetch(this.href)
+          .then((res) => res.text())
+          .then((html) => {
+            // Parse thành DOM để tách <head> và <body>
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+
+            // Xóa CSS cũ
+            document
+              .querySelectorAll("link[rel='stylesheet'], style")
+              .forEach((el) => el.remove());
+
+            // Thêm CSS mới
+            doc
+              .querySelectorAll("link[rel='stylesheet'], style")
+              .forEach((el) => document.head.appendChild(el));
+            // Lên đầu
+            document.documentElement.scrollTop = 0;
+            document.body.innerHTML = html;
+            // Add event for sign in button
+            document
+              .getElementById("sign-in-button")
+              .addEventListener("click", function (e) {
+                const dialog = document.getElementById("trollDialog");
+                const closeBtn = document.getElementById("closeTroll");
+                const audio = document.getElementById("trollAudio");
+
+                dialog.style.display = "flex"; // hiện dialog
+                audio.currentTime = 0;
+                audio.play(); // phát nhạc troll
+                closeBtn.addEventListener("click", () => {
+                  dialog.style.display = "none";
+                  audio.pause();
+                });
+              });
+            // Add event for regist member button
+            document
+              .getElementById("cta-button")
+              .addEventListener("click", function (e) {
+                const dialog = document.getElementById("trollDialog");
+                const closeBtn = document.getElementById("closeTroll");
+                const audio = document.getElementById("trollAudio");
+
+                dialog.style.display = "flex"; // hiện dialog
+                audio.currentTime = 0;
+                audio.play(); // phát nhạc troll
+                closeBtn.addEventListener("click", () => {
+                  dialog.style.display = "none";
+                  audio.pause();
+                });
+              });
+          })
+          .catch((err) => console.error(err));
+      });
+    </script>
+  </body>
+</html>
