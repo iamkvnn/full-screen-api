@@ -4,6 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fullscreen API Attack - Security Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Cấu hình Tailwind CSS
+      tailwind.config = {
+          theme: {
+              extend: {
+                  colors: {
+                      'netflix-red': '#e50914',
+                      'netflix-red-dark': '#f40612',
+                  }
+              }
+          }
+      };
+    </script>
     <link rel="stylesheet" href="./landing_page.css" />
   </head>
   <body>
@@ -85,14 +99,14 @@
           Khám phá cách thức hoạt động của Fullscreen API Attack thông qua demo
           tương tác
         </p>
-        <a href="./index3.html" class="demo-button" onclick="openDemo()">
+        <a href="./index2.html" class="demo-button" onclick="openDemo()">
           🚀 Chạy Demo Thử Nghiệm
         </a>
       </div>
 
       <footer class="footer">
         <p>
-          &copy; 2024 Security Research Demo | Chỉ dành cho mục đích giáo dục
+          &copy; 2025 WebSec Lab | Chỉ dành cho mục đích giáo dục
         </p>
       </footer>
     </div>
@@ -119,57 +133,233 @@
         fetch(this.href)
           .then((res) => res.text())
           .then((html) => {
-            // Parse thành DOM để tách <head> và <body>
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, "text/html");
-
-            // Xóa CSS cũ
-            document
-              .querySelectorAll("link[rel='stylesheet'], style")
-              .forEach((el) => el.remove());
-
-            // Thêm CSS mới
-            doc
-              .querySelectorAll("link[rel='stylesheet'], style")
-              .forEach((el) => document.head.appendChild(el));
             // Lên đầu
             document.documentElement.scrollTop = 0;
             document.body.innerHTML = html;
-            // Add event for sign in button
-            document
-              .getElementById("sign-in-button")
-              .addEventListener("click", function (e) {
-                const dialog = document.getElementById("trollDialog");
-                const closeBtn = document.getElementById("closeTroll");
-                const audio = document.getElementById("trollAudio");
-
-                dialog.style.display = "flex"; // hiện dialog
-                audio.currentTime = 0;
-                audio.play(); // phát nhạc troll
-                closeBtn.addEventListener("click", () => {
-                  dialog.style.display = "none";
-                  audio.pause();
-                });
-              });
-            // Add event for regist member button
-            document
-              .getElementById("cta-button")
-              .addEventListener("click", function (e) {
-                const dialog = document.getElementById("trollDialog");
-                const closeBtn = document.getElementById("closeTroll");
-                const audio = document.getElementById("trollAudio");
-
-                dialog.style.display = "flex"; // hiện dialog
-                audio.currentTime = 0;
-                audio.play(); // phát nhạc troll
-                closeBtn.addEventListener("click", () => {
-                  dialog.style.display = "none";
-                  audio.pause();
-                });
-              });
+            // Initialize all events after loading Netflix page
+            initTrollEvents();
+            initCarousel();
+            initFAQ();
+            initSmoothScroll();
           })
           .catch((err) => console.error(err));
       });
+
+      // Function to initialize troll events
+      function initTrollEvents() {
+        const signInBtn = document.getElementById("sign-in-button");
+        const ctaBtn = document.getElementById("cta-button");
+        
+        if (signInBtn) {
+          signInBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            showTrollDialog();
+          });
+        }
+        
+        if (ctaBtn) {
+          ctaBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            showTrollDialog();
+          });
+        }
+      }
+
+      // Function to show troll dialog
+      function showTrollDialog() {
+        const dialog = document.getElementById("trollDialog");
+        const closeBtn = document.getElementById("closeTroll");
+        const audio = document.getElementById("trollAudio");
+
+        if (dialog && closeBtn && audio) {
+          dialog.style.display = "flex";
+          audio.currentTime = 0;
+          audio.play();
+          
+          closeBtn.addEventListener("click", () => {
+            dialog.style.display = "none";
+            audio.pause();
+          });
+        }
+      }
+
+      // Function to initialize carousel
+      function initCarousel() {
+        const trendList = document.getElementById('trend-list');
+        if (!trendList) return;
+        
+        const items = Array.from(trendList.children);
+        let currentIndex = 0;
+        let visibleCount = 1;
+        let itemWidth = 0;
+        let gap = 16;
+
+        function updateLayout() {
+          const w = window.innerWidth;
+          if (w >= 1280) visibleCount = 5;
+          else if (w >= 1024) visibleCount = 4;
+          else if (w >= 768) visibleCount = 3;
+          else if (w >= 640) visibleCount = 2;
+          else visibleCount = 1;
+
+          if (items.length > 0) {
+            const firstItem = items[0];
+            itemWidth = firstItem.offsetWidth;
+          }
+        }
+
+        function updateCarousel() {
+          const translateX = -(currentIndex * (itemWidth + gap));
+          trendList.style.transform = `translateX(${translateX}px)`;
+          updateButtonStates();
+        }
+
+        function updateButtonStates() {
+          const prevBtn = document.getElementById('trend-prev');
+          const nextBtn = document.getElementById('trend-next');
+          
+          if (prevBtn) {
+            if (currentIndex <= 0) {
+              prevBtn.classList.remove('visible');
+              prevBtn.classList.add('hidden');
+            } else {
+              prevBtn.classList.remove('hidden');
+              prevBtn.classList.add('visible');
+            }
+          }
+          
+          if (nextBtn) {
+            if (currentIndex >= items.length - visibleCount) {
+              nextBtn.classList.remove('visible');
+              nextBtn.classList.add('hidden');
+            } else {
+              nextBtn.classList.remove('hidden');
+              nextBtn.classList.add('visible');
+            }
+          }
+        }
+
+        function nextTrending() {
+          const maxIndex = items.length - visibleCount;
+          if (currentIndex < maxIndex) {
+            currentIndex = Math.min(currentIndex + visibleCount, maxIndex);
+            updateCarousel();
+          }
+        }
+
+        function prevTrending() {
+          if (currentIndex > 0) {
+            currentIndex = Math.max(currentIndex - visibleCount, 0);
+            updateCarousel();
+          }
+        }
+
+        // Event listeners
+        const nextBtn = document.getElementById('trend-next');
+        const prevBtn = document.getElementById('trend-prev');
+        
+        if (nextBtn) {
+          nextBtn.onclick = (e) => {
+            e.preventDefault();
+            if (currentIndex < items.length - visibleCount) {
+              nextTrending();
+            }
+          };
+        }
+        
+        if (prevBtn) {
+          prevBtn.onclick = (e) => {
+            e.preventDefault();
+            if (currentIndex > 0) {
+              prevTrending();
+            }
+          };
+        }
+
+        // Window resize handler
+        window.addEventListener('resize', () => {
+          updateLayout();
+          const maxIndex = items.length - visibleCount;
+          if (currentIndex > maxIndex) {
+            currentIndex = Math.max(0, maxIndex);
+          }
+          updateCarousel();
+        });
+
+        // Hover effects
+        items.forEach(item => {
+          item.addEventListener('mouseenter', () => {
+            item.style.transform = 'scale(1.05)';
+            item.style.zIndex = '20';
+          });
+          
+          item.addEventListener('mouseleave', () => {
+            item.style.transform = 'scale(1)';
+            item.style.zIndex = '1';
+          });
+        });
+
+        // Initialize
+        updateLayout();
+        updateCarousel();
+        
+        if (prevBtn) prevBtn.classList.add('hidden');
+        if (nextBtn) nextBtn.classList.add('visible');
+
+        // Handle image load
+        items.forEach(item => {
+          const img = item.querySelector('img');
+          if (img) {
+            img.addEventListener('load', () => {
+              updateLayout();
+              updateCarousel();
+            });
+          }
+        });
+
+        // Click to be trolled
+        items.forEach(item => {
+          item.addEventListener('click', (e) => {
+            e.preventDefault();
+            showTrollDialog();
+          });
+        });
+      }
+
+      // Function to initialize FAQ
+      function initFAQ() {
+        document.querySelectorAll('.faq-question').forEach(question => {
+          question.addEventListener('click', () => {
+            const answer = question.nextElementSibling;
+            const icon = question.querySelector('span');
+            const isActive = answer.style.maxHeight && answer.style.maxHeight !== '0px';
+
+            // Close all other FAQ items
+            document.querySelectorAll('.faq-question').forEach(q => {
+              const a = q.nextElementSibling;
+              const i = q.querySelector('span');
+              a.style.maxHeight = '0px';
+              i.style.transform = 'rotate(0deg)';
+            });
+
+            // Toggle current item
+            if (!isActive) {
+              answer.style.maxHeight = answer.scrollHeight + 'px';
+              icon.style.transform = 'rotate(45deg)';
+            }
+          });
+        });
+      }
+
+      // Function to initialize smooth scroll
+      function initSmoothScroll() {
+        const links = document.querySelectorAll('a[href="#"]');
+        links.forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+          });
+        });
+      }
     </script>
   </body>
 </html>
